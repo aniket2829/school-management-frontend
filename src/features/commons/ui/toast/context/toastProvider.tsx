@@ -7,7 +7,7 @@ export type ToastType = 'info' | 'success' | 'error';
 
 export interface ToastItem {
   id: number;
-  message: string;
+  message: string; 
   type: ToastType;
 }
 
