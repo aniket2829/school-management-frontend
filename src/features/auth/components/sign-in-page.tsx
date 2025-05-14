@@ -1,12 +1,12 @@
 "use client";
 import Link from "next/link";
-import Button from "@/features/commons/ui/button";
+import Button from "@/commons/ui/button";
 
 import FacebookIcon from "@/assets/images/FacebookIcon.svg";
 import GoogleIcon from "@/assets/images/GoogleIcon.svg";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { useToast } from "@/features/commons/ui/toast/context/useToast";
+import { useToast } from "@/common/ui/toast";
 
 export default function SignIn() {
   const { showToast } = useToast();
