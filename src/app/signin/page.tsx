@@ -1,4 +1,4 @@
-import SignIn from "@/features/auth/components/sign-in-page";
+import SignIn from "@/features/auth/components/signin";
 
 export default function page(){
   return (

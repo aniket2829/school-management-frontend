@@ -1,14 +1,24 @@
 import type { Metadata } from "next";
-import {  Inter } from "next/font/google";
+import { Inter } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 
-import { ToastProvider } from "@/common/ui/toast";
+import { Toaster } from "sonner";
 
 const inter = Inter({
-  subsets: ['latin'],
-  weight: ["100", "300", "400", "600", "700"]
-})
+  subsets: ["latin"],
+  weight: ["100", "300", "400", "600", "700"],
+});
 
+const satoshi = localFont({
+  display: "swap",
+  src: [
+    {
+      path: "../../public/fonts/satoshi.ttf",
+    },
+  ],
+  variable: "--font-satoshi",
+});
 
 export const metadata: Metadata = {
   title: "School Managemenet",
@@ -21,13 +31,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning={true} lang="en">
       <body
-        className={`${inter.className} antialiased`}
+        suppressHydrationWarning={true}
+        className={`${satoshi.variable} font-satoshi antialiased`}
       >
-        <ToastProvider>
+        <Toaster richColors />
         {children}
-        </ToastProvider>
       </body>
     </html>
   );

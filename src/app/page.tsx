@@ -1,9 +1,5 @@
 import Image from "next/image";
 
 export default function Home() {
-  return (
-    <div>
-      Home Page
-    </div>
-  );
+  return <main className="flex min-h-screen ">HOME PAGE</main>;
 }
