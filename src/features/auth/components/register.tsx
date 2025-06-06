@@ -1,25 +1,31 @@
 "use client";
-import Link from "next/link";
+
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import { signIn } from "../services/auth-service";
-import { type SignIn, signInSchema } from "../models/auth-model";
+import { signUp } from "../services/auth-service";
+import { type SignUp, signUpSchema } from "../models/auth-model";
 import { useAuth } from "../contexts";
 import { toast } from "sonner";
-import  { useRouter} from "next/navigation";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function SignIn() {
   const { dispatch } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState<SignIn>({
+  const [formData, setFormData] = useState<SignUp>({
     email: "dev@example.com",
     password: "Hello@123",
+    full_name: "John Doe",
   });
 
-  const [formErrors, setFormErrors] = useState<Partial<Record<keyof SignIn, string[]>>>({});
+  const [formErrors, setFormErrors] = useState<
+    Partial<Record<keyof SignUp, string[]>>
+  >({});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const target = e.target as HTMLInputElement;
     const { name, type, value, checked } = target;
 
@@ -36,30 +42,28 @@ export default function SignIn() {
   };
 
   const handleSubmit = async () => {
-    const result = signInSchema.safeParse(formData);
+    const schemaResult = signUpSchema.safeParse(formData);
 
-    if (!result.success) {
-      const errors = result.error.flatten().fieldErrors;
+    if (!schemaResult.success) {
+      const errors = schemaResult.error.flatten().fieldErrors;
       setFormErrors(errors);
       return;
     }
-
-    try {
-      const result = await signIn(formData);
-      console.log(result)
-      dispatch({ type: "LOGIN_SUCCESS", payload: { access_token: result.data.access_token, user: result.data.user } });
-      toast.success("Sign in successful");
-      router.push("/");
-      // Handle success...
-    } catch (err: any) {
-      toast.error(err.message || "Sign in failed");
-
-      dispatch({ type: "LOGIN_FAILED", payload: err.message });
-      
-      setFormErrors((prev) => ({
-        ...prev,
-        password: [err.message || "Sign in failed"],
-      }));
+    const result = await signUp(formData);
+    console.log(result);
+    if (!result.success) {
+      if (result.error && result.error.detail) {
+        toast.error(result.error.detail);
+        setFormErrors((prev) => ({
+          ...prev,
+          password: [result.error?.detail || "Sign in failed"],
+        }));
+      }
+      return;
+    }
+    if (result.success) {
+      toast.success("Sign up successful");
+      router.push("/signin");
     }
   };
 
@@ -67,7 +71,7 @@ export default function SignIn() {
     <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
       <div className="flex flex-col gap-6 w-full max-w-md">
         <h2 className="font-bold text-2xl text-center">
-          Sign in to your account
+          <span className="text-blue-600">Sign up to create an account</span>
         </h2>
         <form
           className="flex flex-col gap-6 p-6 sm:p-10 bg-white shadow-sm rounded-xl w-full"
@@ -77,6 +81,25 @@ export default function SignIn() {
           }}
           noValidate
         >
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium" htmlFor="full_name">
+              Full Name
+            </label>
+            <input
+              className="shadow text-sm border rounded w-full py-2 px-3 border-gray-300 text-gray-700 focus:outline-none focus:shadow-outline focus:border-gray-400"
+              id="full_name"
+              type="text"
+              placeholder="Full Name"
+              value={formData.full_name}
+              name="full_name"
+              onChange={handleChange}
+            />
+            {formErrors.full_name && (
+              <p className="text-sm text-red-500 font-semibold">
+                {formErrors.full_name[0]}
+              </p>
+            )}
+          </div>
           <div className="flex flex-col gap-2">
             <label className="text-sm font-medium" htmlFor="email">
               Email
@@ -91,7 +114,9 @@ export default function SignIn() {
               onChange={handleChange}
             />
             {formErrors.email && (
-              <p className="text-sm text-red-500 font-semibold">{formErrors.email[0]}</p>
+              <p className="text-sm text-red-500 font-semibold">
+                {formErrors.email[0]}
+              </p>
             )}
           </div>
 
@@ -116,7 +141,9 @@ export default function SignIn() {
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
             {formErrors.password && (
-              <p className="text-sm text-red-500 font-semibold">{formErrors.password[0]}</p>
+              <p className="text-sm text-red-500 font-semibold">
+                {formErrors.password[0]}
+              </p>
             )}
           </div>
 
@@ -124,17 +151,17 @@ export default function SignIn() {
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full cursor-pointer transition duration-300 ease-in-out"
             type="submit"
           >
-            Sign in
+            Sign up
           </button>
         </form>
 
-        <p className="text-center text-md text-gray-800">
-          Don't have an account?{" "}
+          <p className="text-center text-md text-gray-800">
+          Already have an account?{" "}
           <Link
-            href="/register"
+            href="/signin"
             className="text-blue-500 hover:text-blue-700 font-semibold"
           >
-            Sign up
+            Sign in
           </Link>
         </p>
       </div>

@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 import { Toaster } from "sonner";
-
+import { AuthProvider } from "@/features/auth/contexts";
 const inter = Inter({
   subsets: ["latin"],
   weight: ["100", "300", "400", "600", "700"],
@@ -36,8 +36,10 @@ export default function RootLayout({
         suppressHydrationWarning={true}
         className={`${satoshi.variable} font-satoshi antialiased`}
       >
-        <Toaster richColors />
-        {children}
+        <AuthProvider>
+          <Toaster richColors />
+          {children}
+        </AuthProvider>
       </body>
     </html>
   );

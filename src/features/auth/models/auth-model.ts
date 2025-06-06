@@ -12,5 +12,44 @@ export const signInSchema = z.object({
     .max(255, { message: "Invalid password" }),
 });
 
+
+export const signUpSchema = signInSchema.extend({
+  full_name: z.string().min(1, { message: "Full name is required" }),
+});
+
 export type SignIn = z.infer<typeof signInSchema>;
+export type SignUp = z.infer<typeof signUpSchema>;
+
+
+export const SignInResponseSchema = z.object({
+  meta: z.object({}),
+  data: z.object({
+    access_token: z.string(),
+    user: z.object({
+      id: z.number(),
+      created_at: z.string(),
+      updated_at: z.string(),
+      full_name: z.string(),
+      email: z.string(),
+      password_hash: z.string()
+    })
+  })
+})
+
+export const SignUpResponseSchema = z.object({
+  meta: z.object({}),
+  data: z.object({
+      id: z.number(),
+      created_at: z.string(),
+      updated_at: z.string(),
+      full_name: z.string(),
+      email: z.string(),
+      password_hash: z.string()
+  })
+});
+
+export type SignInResponse = z.infer<typeof SignInResponseSchema>;
+export type SignUpResponse = z.infer<typeof SignUpResponseSchema>;
+export type User = SignInResponse["data"]["user"];
+
 
