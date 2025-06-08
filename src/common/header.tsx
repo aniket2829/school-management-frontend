@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 
 const Header = () => {
-  const selectedLayout = useSelectedLayoutSegment();
+  
 
   return (
     <div

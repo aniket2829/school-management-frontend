@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/features/auth/contexts";
 import { AuthStatus } from "@/features/auth/contexts/types";
-import Loader from "./loading";
+import Loader from "../loading";
 
 export default function Home() {
   const { state } = useAuth();
