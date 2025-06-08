@@ -1,20 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import localFont from "next/font/local";
-import "./globals.css";
-
-import { Toaster } from "sonner";
-import { AuthProvider } from "@/features/auth/contexts";
-const inter = Inter({
-  subsets: ["latin"],
-  weight: ["100", "300", "400", "600", "700"],
-});
+import "../../app/globals.css";
 
 const satoshi = localFont({
   display: "swap",
   src: [
     {
-      path: "../../public/fonts/satoshi.ttf",
+      path: "../../../public/fonts/satoshi.ttf",
     },
   ],
   variable: "--font-satoshi",
@@ -25,7 +17,7 @@ export const metadata: Metadata = {
   description: "School Managemenet",
 };
 
-export default function RootLayout({
+export default function AuthLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -36,10 +28,7 @@ export default function RootLayout({
         suppressHydrationWarning={true}
         className={`${satoshi.variable} font-satoshi antialiased`}
       >
-        <AuthProvider>
-          <Toaster richColors />
           {children}
-        </AuthProvider>
       </body>
     </html>
   );
